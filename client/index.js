@@ -84,26 +84,23 @@ document.body.onpointermove = (e) => {//animation du blob qui suit la souris
 }
 
 
-let test = ()=>{
-    
-document.querySelector("h1").onmouseover = (e) => {//animation du titre qui change de lettre au survol de la souris
-    if(count <1){
-    console.log(count);
-    let i = 0;
-    const interval  = setInterval(() => {
-        e.target.innerText = e.target.innerText.split("").map((letter,index) => {
-            if(index < i){
-                return e.target.dataset.value[index];
-            }
-           return  letters[Math.floor(Math.random() * 26)]}).join("");
-
-        if(i >= e.target.dataset.value.length )clearInterval(interval);
-        i += 1 / 3;
-    }, 20);
-  
-}
-count++;//on ne laisse l'animation se faire qu'une seule fois
-}
+let test = ()=>{ 
+    document.querySelector("h1").onmouseover = (e) => {//animation du titre qui change de lettre au survol de la souris
+        if(count <1){
+            console.log(count);
+            let i = 0;
+            const interval  = setInterval(() => {
+                e.target.innerText = e.target.innerText.split("").map((letter,index) => {
+                    if(index < i){
+                        return e.target.dataset.value[index];
+                    }
+                return  letters[Math.floor(Math.random() * 26)]}).join("");
+                if(i >= e.target.dataset.value.length )clearInterval(interval);
+                i += 1 / 3;
+            }, 20);
+        }   
+        count++;//on ne laisse l'animation se faire qu'une seule fois
+    }
 };
 
 test();
