@@ -1,0 +1,5 @@
+MONGO DB EST LAAAAAAAAAAAAAAAA
+apprendre a l'utiliser avec le js
+
+lancer mongodb : "sudo systemctl start  mongod"
+lancer la console: mongosh
