@@ -5,74 +5,76 @@ const blob = document.querySelector('.blob');
 let count = 0 ;
 
 
+
+
 $('.add-task-form').on('submit', (e)=>{//ajouter une tache
     e.preventDefault();
     let testTime = new Date($('.task-time').val());
-    let minutes = testTime.getMinutes();
-    let hours = testTime.getHours();
+    let minute = testTime.getMinutes();
+    let hour = testTime.getHours();
     let year = testTime.getFullYear();
-    let month = testTime.getMonth();
+    let month = testTime.getMonth()+1;
     let day = testTime.getDate();
 
     let taskName = $('.task-name').val();
-    let taskTime = {day, month, year, hours, minutes};
-    let task = {taskName, taskTime};
-    taskTab.push(task);
-    //console.log(taskTab);
+    let taskDate = {day, month, year}
+    let taskTime = {hour, minute};
+    let task = {taskName,taskTime,taskDate};
 
-    
-   
-    //console.log(taskName+' '+year+' '+month+' '+day+' '+hours+' '+minutes);
-   
+
+    //if the taskname contain special characters or is empty we don't send it and send an error message
+    if(taskName.match(/[^a-zA-Z0-9]/) || taskName == ''){
+        $('.error').text('Please enter a valid task name');
+        return;
+    }
+
     $('.task-name').val('');
     $('.task-time').val('');
-    tri(taskTab);
-    console.log(taskTab);
-    $('.list-content').empty();//on efface le contenu de la liste et on affiche après avoir trié
 
-
-
-    taskTab.forEach((task)=>{//on parcoure la liste des taches et on les affiche
-        let li = document.createElement('li');
-        if (task.taskTime.minutes < 10) {//gestion des 0 devant les minutes et les heures etc...
-            task.taskTime.minutes = '0' + task.taskTime.minutes;
-        }
-        if (task.taskTime.hours < 10) {
-            task.taskTime.hours = '0' + task.taskTime.hours;
-        }
-        if (task.taskTime.day < 10) {
-            task.taskTime.day = '0' + task.taskTime.day;
-        }
-        if (task.taskTime.month < 10) {
-            task.taskTime.month = '0' + task.taskTime.month;
-        }
-
-//on affiche la tache
-        li.textContent = task.taskName+' '+task.taskTime.day+'/'+task.taskTime.month+'/'+task.taskTime.year+' '+task.taskTime.hours+':'+task.taskTime.minutes;
-        $('.list-content').append(li);
-    });
+    //send the task to the server
+    socket.emit('taskAdd',task);
 
 });
 
 
 
-let  tri = (tab)=> {//trier pour l'instant en fonction du jour
+//shorter sort method fo the tasktab using new Date
+const triTaskDate = (tab)=> {
     tab.sort((a, b) => {
-        // Convertir les dates en objets Date
-        let dateA = new Date(a.taskTime.year, a.taskTime.month, a.taskTime.day, a.taskTime.hours, a.taskTime.minutes);
-        let dateB = new Date(b.taskTime.year, b.taskTime.month, b.taskTime.day, b.taskTime.hours, b.taskTime.minutes);
-        console.log(dateA-dateB);
-
-        if( dateA-dateB <0){
-            return -1;
-        }
-
-        if( dateA-dateB >0){
-            return 1;
-        }
-        // Comparer les dates en
+        let dateA = new Date(a.date__.year,a.date__.month,a.date__.day,a.time__.hour,a.time__.minute);
+        let dateB = new Date(b.date__.year,b.date__.month,b.date__.day,b.time__.hour,b.time__.minute);
+        return dateA - dateB;
     });
 }
+
+
+socket.on('connect', () => {
+    console.log('connected');
+});
+
+socket.on('tasks', (tasks) => {
+    console.log(tasks);
+    $('.list-content').empty();
+    //empty the list
+    taskTab = [];
+    tasks.forEach((task)=>{
+        taskTab.push(task);
+    });
+    console.log(taskTab);
+    triTaskDate(taskTab);
+    console.log("trié "+ taskTab);
+    taskTab.forEach((task)=>{//on parcoure la liste des taches et on les affiche
+        let li = document.createElement('li');
+        if(task.time__.hour < 10) task.time__.hour = '0' + task.time__.hour;
+        if(task.time__.minute < 10) task.time__.minute = '0' + task.time__.minute;
+        if(task.time__.hour == 0) task.time__.hour = '00';
+        if(task.time__.minute == 0) task.time__.minute = '00';
+        li.textContent = task.name + ' ' + task.date__.day + '/' + task.date__.month + '/' + task.date__.year+ ' ' + task.time__.hour + ':' + task.time__.minute;
+        //append it
+        $('.list-content').append(li);
+    });
+});
+
 
 document.body.onpointermove = (e) => {//animation du blob qui suit la souris
     const {clientX, clientY} = e;
@@ -80,11 +82,10 @@ document.body.onpointermove = (e) => {//animation du blob qui suit la souris
         left :` ${clientX}px`,
         top: `${clientY}px`
     },{duration:3000,fill:'forwards'});
-   
-}
 
+};
 
-let test = ()=>{ 
+let titleRoll = ()=>{
     document.querySelector("h1").onmouseover = (e) => {//animation du titre qui change de lettre au survol de la souris
         if(count <1){
             console.log(count);
@@ -98,9 +99,9 @@ let test = ()=>{
                 if(i >= e.target.dataset.value.length )clearInterval(interval);
                 i += 1 / 3;
             }, 20);
-        }   
+        }
         count++;//on ne laisse l'animation se faire qu'une seule fois
     }
 };
 
-test();
+titleRoll();

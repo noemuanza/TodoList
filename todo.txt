@@ -1,5 +1,7 @@
-MONGO DB EST LAAAAAAAAAAAAAAAA
-apprendre a l'utiliser avec le js
+J'arrive a recuperer les tasks depuis la database !!!!
+maintenant qu'on arrive a les afficher il faudrait pouvoir afficher la date aussi car elle est undefined
 
-lancer mongodb : "sudo systemctl start  mongod"
-lancer la console: mongosh
+-Ajouter depuis le form une task a la database
+
+-Plus simple depuis windows avec mongodb compass
+-fonction de tri a refaire un peu mieux
